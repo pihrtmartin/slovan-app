@@ -720,10 +720,18 @@
 </div>
 
 <script>
-    // Inicializace Firebase
+    // Inicializace Firebase pro HC Slovan Louny
     const firebaseConfig = {
-        databaseURL: "https://hc-slovan-louny-default-rtdb.europe-west1.firebasedatabase.app/"
+        apiKey: "AIzaSyDCRCC7JZ8fUO0ly5EBrJwIMrvB8eq3MD4",
+        authDomain: "hc-slovan-louny.firebaseapp.com",
+        databaseURL: "https://hc-slovan-louny-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "hc-slovan-louny",
+        storageBucket: "hc-slovan-louny.firebasestorage.app",
+        messagingSenderId: "1095365058859",
+        appId: "1:1095365058859:web:1987c8eac2305f9ccca56e",
+        measurementId: "G-7J2DJX4NLJ"
     };
+
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
