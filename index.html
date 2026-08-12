@@ -7,7 +7,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></link>
     <!-- html2canvas pro export sestavy jako obrázek -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -56,7 +56,7 @@
                 </button>
             </div>
             <div id="matches-list" class="grid gap-4 md:grid-cols-2">
-                <!-- Dynamicky z Firebase -->
+                <!-- Vkládáno dynamicky -->
             </div>
         </section>
 
@@ -79,7 +79,7 @@
                         </tr>
                     </thead>
                     <tbody id="players-table-body" class="divide-y divide-slate-100 text-sm">
-                        <!-- Dynamicky z Firebase -->
+                        <!-- Vkládáno dynamicky -->
                     </tbody>
                 </table>
             </div>
@@ -97,7 +97,6 @@
                     <h2 id="detail-match-title" class="text-3xl font-black text-slovan-blue"></h2>
                     <p id="detail-match-info" class="text-slate-500 text-sm mt-1"></p>
                 </div>
-                <!-- TLAČÍTKO PRO VYTVOŘENÍ SESTAVY -->
                 <button onclick="openLineupModal()" class="bg-slovan-red hover:bg-red-700 text-white px-5 py-3 rounded-xl shadow-lg font-bold flex items-center gap-2 transition transform hover:scale-105">
                     <i class="fa-solid fa-chess-board text-lg"></i> Vytvořit sestavu
                 </button>
@@ -107,7 +106,7 @@
             <div class="bg-white p-6 rounded-2xl shadow-md space-y-4">
                 <h3 class="text-lg font-bold text-slovan-blue"><i class="fa-solid fa-shield-halved mr-2"></i>Uložené sestavy k zápasu</h3>
                 <div id="saved-lineups-preview" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Dynamicky -->
+                    <!-- Vkládáno dynamicky -->
                 </div>
             </div>
         </section>
@@ -141,14 +140,14 @@
         </div>
     </div>
 
-    <!-- MODÁLNÍ OKNO: INTERAKTIVNÍ LEDOVÁ PLOCHA & SESTAVY -->
+    <!-- MODÁLNÍ OKNO: LEDOVÁ PLOCHA & SESTAVY -->
     <div id="modal-lineup" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-2 sm:p-4 z-50 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl space-y-4 my-auto">
             
             <div class="flex justify-between items-center border-b pb-3">
                 <div>
                     <h3 class="text-xl font-black text-slovan-blue"><i class="fa-solid fa-hockey-puck mr-2"></i>Interaktivní sestava</h3>
-                    <p class="text-xs text-slate-500">Nacvakejte lajny na hřišti (podpora duplicitních výběrů napříč lajnami)</p>
+                    <p class="text-xs text-slate-500">Nacvakejte lajny na hřišti</p>
                 </div>
                 <button onclick="closeLineupModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold p-2"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -229,81 +228,52 @@
         </div>
     </div>
 
-    <!-- Firebase SDK (Modular v9) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, set, get, remove, child } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
-        // Vaše Firebase konfigurace
-        const firebaseConfig = {
-            apiKey: "AIzaSyDCRCC7JZ8fUO0ly5EBrJwIMrvB8eq3MD4",
-            authDomain: "hc-slovan-louny.firebaseapp.com",
-            databaseURL: "https://hc-slovan-louny-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "hc-slovan-louny",
-            storageBucket: "hc-slovan-louny.firebasestorage.app",
-            messagingSenderId: "1095365058859",
-            appId: "1:1095365058859:web:1987c8eac2305f9ccca56e",
-            measurementId: "G-7J2DJX4NLJ"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
+    <!-- Aplikační logika -->
+    <script>
         let players = [];
         let matches = [];
         let currentMatchId = null;
         let currentLineupTab = 'lajna1';
         let activeMatchLineups = {};
 
-        // Zpřístupnění funkcí globálně pro HTML event handlery
-        window.switchTab = switchTab;
-        window.addPlayerPrompt = addPlayerPrompt;
-        window.deletePlayer = deletePlayer;
-        window.openNewMatchModal = openNewMatchModal;
-        window.closeNewMatchModal = closeNewMatchModal;
-        window.saveNewMatch = saveNewMatch;
-        window.deleteMatch = deleteMatch;
-        window.openMatchDetail = openMatchDetail;
-        window.openLineupModal = openLineupModal;
-        window.closeLineupModal = closeLineupModal;
-        window.switchLineupTab = switchLineupTab;
-        window.updateLineupData = updateLineupData;
-        window.saveLineupChanges = saveLineupChanges;
-        window.exportLineupImage = exportLineupImage;
-
-        // Načtení dat z Firebase při startu
         function loadData() {
-            const dbRef = ref(db);
-            get(child(dbRef, 'slovan_app')).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    players = data.players || [];
-                    matches = data.matches || [];
-                } else {
-                    // Výchozí data, pokud je databáz prázdná
-                    players = [
-                        { id: 1, name: 'Jan Novák', pos: 'Útočník' },
-                        { id: 2, name: 'Petr Svoboda', pos: 'Obránce' },
-                        { id: 3, name: 'Martin Dvořák', pos: 'Útočník' },
-                        { id: 4, name: 'Tomáš Černý', pos: 'Brankář' }
-                    ];
-                    matches = [];
-                    saveDataToFirebase();
-                }
-                renderPlayers();
-                renderMatches();
-            }).catch((error) => {
-                console.error("Chyba při načítání dat:", error);
-            });
+            const savedPlayers = localStorage.getItem('slovan_players');
+            const savedMatches = localStorage.getItem('slovan_matches');
+
+            if (!savedPlayers) {
+                players = [
+                    { id: 1, name: 'Jan Novák', pos: 'Útočník' },
+                    { id: 2, name: 'Petr Svoboda', pos: 'Obránce' },
+                    { id: 3, name: 'Martin Dvořák', pos: 'Útočník' },
+                    { id: 4, name: 'Tomáš Černý', pos: 'Brankář' }
+                ];
+                localStorage.setItem('slovan_players', JSON.stringify(players));
+            } else {
+                players = JSON.parse(savedPlayers);
+            }
+
+            if (!savedMatches) {
+                matches = [
+                    {
+                        id: 9991,
+                        opponent: 'HC Rakovník',
+                        date: '2026-08-20T18:00',
+                        availablePlayers: [1, 2, 3, 4],
+                        lineups: {}
+                    }
+                ];
+                localStorage.setItem('slovan_matches', JSON.stringify(matches));
+            } else {
+                matches = JSON.parse(savedMatches);
+            }
+
+            renderPlayers();
+            renderMatches();
         }
 
-        function saveDataToFirebase() {
-            set(ref(db, 'slovan_app'), {
-                players: players,
-                matches: matches
-            }).catch((error) => {
-                console.error("Chyba při ukládání dat:", error);
-            });
+        function saveData() {
+            localStorage.setItem('slovan_players', JSON.stringify(players));
+            localStorage.setItem('slovan_matches', JSON.stringify(matches));
         }
 
         function switchTab(tabName) {
@@ -325,7 +295,6 @@
             }
         }
 
-        // --- SPRÁVA HRÁČŮ ---
         function renderPlayers() {
             const tbody = document.getElementById('players-table-body');
             tbody.innerHTML = '';
@@ -336,7 +305,7 @@
                         <td class="p-3 font-semibold text-slate-800">${p.name}</td>
                         <td class="p-3"><span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs font-bold">${p.pos}</span></td>
                         <td class="p-3 text-right">
-                            <button onclick="window.deletePlayer(${p.id})" class="text-red-500 hover:text-red-700 text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="deletePlayer(${p.id})" class="text-red-500 hover:text-red-700 text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -348,24 +317,23 @@
             if (!name) return;
             const pos = prompt("Zadejte post (Útočník / Obránce / Brankář):", "Útočník");
             players.push({ id: Date.now(), name, pos: pos || 'Útočník' });
-            saveDataToFirebase();
+            saveData();
             renderPlayers();
         }
 
         function deletePlayer(id) {
             if (confirm("Opravdu chcete hráče smazat?")) {
                 players = players.filter(p => p.id !== id);
-                saveDataToFirebase();
+                saveData();
                 renderPlayers();
             }
         }
 
-        // --- SPRÁVA ZÁPASŮ ---
         function renderMatches() {
             const list = document.getElementById('matches-list');
             list.innerHTML = '';
             if (matches.length === 0) {
-                list.innerHTML = `<p class="text-slate-500 text-sm">Žádné naplánované zápasy.</p>`;
+                list.innerHTML = `<p class="text-slate-500 text-sm italic">Žádné naplánované zápasy. Klikněte nahoře na „Nový zápas“.</p>`;
                 return;
             }
             matches.forEach(m => {
@@ -379,10 +347,10 @@
                             <h3 class="text-xl font-bold text-slovan-blue mt-1">HC Slovan Louny vs. ${m.opponent}</h3>
                         </div>
                         <div class="flex justify-between items-center pt-2 border-t">
-                            <button onclick="window.openMatchDetail(${m.id})" class="text-slovan-blue font-bold text-sm hover:underline flex items-center gap-1">
+                            <button onclick="openMatchDetail(${m.id})" class="text-slovan-blue font-bold text-sm hover:underline flex items-center gap-1">
                                 <i class="fa-solid fa-eye"></i> Detail a sestavy
                             </button>
-                            <button onclick="window.deleteMatch(${m.id})" class="text-slate-400 hover:text-red-500 text-xs"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="deleteMatch(${m.id})" class="text-slate-400 hover:text-red-500 text-xs"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -394,6 +362,9 @@
             document.getElementById('match-date').value = '';
             const container = document.getElementById('match-players-checkboxes');
             container.innerHTML = '';
+            if (players.length === 0) {
+                container.innerHTML = `<p class="text-xs text-red-500">Nejprve přidejte hráče v záložce Hráči!</p>`;
+            }
             players.forEach(p => {
                 container.innerHTML += `
                     <label class="flex items-center space-x-2 cursor-pointer">
@@ -426,7 +397,7 @@
                 availablePlayers,
                 lineups: {}
             });
-            saveDataToFirebase();
+            saveData();
             closeNewMatchModal();
             renderMatches();
         }
@@ -434,12 +405,11 @@
         function deleteMatch(id) {
             if (confirm("Smazat tento zápas?")) {
                 matches = matches.filter(m => m.id !== id);
-                saveDataToFirebase();
+                saveData();
                 renderMatches();
             }
         }
 
-        // --- DETAIL ZÁPASU & SESTAVY ---
         function openMatchDetail(id) {
             currentMatchId = id;
             const match = matches.find(m => m.id === id);
@@ -483,7 +453,6 @@
             return p ? p.name : '-';
         }
 
-        // --- INTERAKTIVNÍ MODÁL SESTAV ---
         function openLineupModal() {
             const match = matches.find(m => m.id === currentMatchId);
             if (!match) return;
@@ -543,11 +512,11 @@
             const match = matches.find(m => m.id === currentMatchId);
             if (match) {
                 match.lineups = JSON.parse(JSON.stringify(activeMatchLineups));
-                saveDataToFirebase();
+                saveData();
             }
             closeLineupModal();
             openMatchDetail(currentMatchId);
-            alert("Sestava byla úspěšně uložena do databáze!");
+            alert("Sestava byla úspěšně uložena!");
         }
 
         function exportLineupImage() {
@@ -562,7 +531,7 @@
             });
         }
 
-        // Spuštění načtení dat
+        // Spuštění při načtení stránky
         loadData();
     </script>
 </body>
