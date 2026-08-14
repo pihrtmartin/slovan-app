@@ -10,13 +10,14 @@ const ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log('Ukládám soubory do cache...');
       return cache.addAll(ASSETS);
     })
   );
   self.skipWaiting();
 });
 
-// Aktivace a vyčištění staré cache
+// Aktivace a odstranění staré cache
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -28,7 +29,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Zachytávání požadavků (Offline podpora)
+// Obsluha požadavků (Offline podpora)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
