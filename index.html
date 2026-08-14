@@ -678,7 +678,7 @@
             <button class="btn-goal-louny" onclick="openEventModal('goal_louny')">🥅 Gól Louny</button>
             <button class="btn-goal-opp" onclick="addOpponentGoal()">🥅 Gól Soupeř</button>
             <button class="btn-pen-louny" onclick="openEventModal('pen_louny')">👮 Faul Louny</button>
-            <button class="btn-pen-opp" onclick="openOpponentPenaltyModal()">👮 Faul Soupeř</button>
+            <button class="btn-pen-opp" onclick="addOpponentPenalty()">👮 Faul Soupeř</button>
         </div>
 
         <h3>Události v utkání</h3>
@@ -1025,7 +1025,7 @@
         matches.forEach(m => {
             let events = m.events && Array.isArray(m.events) ? m.events : [];
             let lounyG = events.filter(e => e.type === 'goal' && e.team === 'HC Slovan Louny').length;
-            let oppG = events.filter(e => e.type === 'goal' && e.team === 'opponent').length;
+            let oppG = events.filter(e => e.type === 'goal' && e.team === m.opponent).length;
             let typeLabel = m.type === 'mistrovsky' ? 'Mistrovský' : (m.type === 'pratelsky' ? 'Přátelský' : 'Turnaj');
             let tName = m.tournament ? m.tournament : '-';
             
@@ -1336,7 +1336,7 @@
             let idx = item.index;
             let events = m.events && Array.isArray(m.events) ? m.events : [];
             let lounyG = events.filter(e => e.type === 'goal' && e.team === 'HC Slovan Louny').length;
-            let oppG = events.filter(e => e.type === 'goal' && e.team === 'opponent').length;
+            let oppG = events.filter(e => e.type === 'goal' && e.team === m.opponent).length;
             let typeLabel = m.type === 'mistrovsky' ? 'Mistrovský' : 'Přátelský';
 
             const card = document.createElement('div');
@@ -1383,7 +1383,7 @@
                     let idx = item.index;
                     let events = m.events && Array.isArray(m.events) ? m.events : [];
                     let lounyG = events.filter(e => e.type === 'goal' && e.team === 'HC Slovan Louny').length;
-                    let oppG = events.filter(e => e.type === 'goal' && e.team === 'opponent').length;
+                    let oppG = events.filter(e => e.type === 'goal' && e.team === m.opponent).length;
 
                     bodyHtml += `
                         <div class="match-card-item" style="margin-bottom:0; background:#f8fafc;">
@@ -1452,10 +1452,10 @@
 
         let events = m.events && Array.isArray(m.events) ? m.events : [];
         let lounyG = events.filter(e => e.type === 'goal' && e.team === 'HC Slovan Louny').length;
-        let oppG = events.filter(e => e.type === 'goal' && e.team === 'opponent').length;
+        let oppG = events.filter(e => e.type === 'goal' && e.team === m.opponent).length;
 
         let lounyP = events.filter(e => e.type === 'penalty' && e.team === 'HC Slovan Louny').length;
-        let oppP = events.filter(e => e.type === 'penalty' && e.team === 'opponent').length;
+        let oppP = events.filter(e => e.type === 'penalty' && e.team === m.opponent).length;
 
         document.getElementById('scoreLouny').innerText = lounyG;
         document.getElementById('scoreOpp').innerText = oppG;
@@ -1480,7 +1480,7 @@
                 if (ev.type === 'goal' && ev.assist && ev.assist !== 'Žádná') {
                     detailStr += ` (Asistence: ${ev.assist})`;
                 }
-                if (ev.penaltyType) {
+                if (ev.penaltyType && ev.team === 'HC Slovan Louny') {
                     detailStr += ` (${ev.penaltyType} - ${ev.minutes} min)`;
                 }
                 let timeStr = ev.eventTime ? `<span style="font-size:11px; color:#666; display:block;">[${ev.eventTime}]</span>` : '';
@@ -1506,8 +1506,8 @@
 
         matches[currentMatchIndex].events.push({
             type: 'goal',
-            team: 'opponent',
-            player: 'Soupeř',
+            team: matches[currentMatchIndex].opponent,
+            player: matches[currentMatchIndex].opponent,
             assist: 'Žádná',
             eventTime: timeFormatted
         });
@@ -1515,7 +1515,7 @@
         renderMatchDetail();
     }
 
-    function openOpponentPenaltyModal() {
+    function addOpponentPenalty() {
         if (currentMatchIndex === null) return;
         if (!matches[currentMatchIndex].events) matches[currentMatchIndex].events = [];
         
@@ -1524,10 +1524,8 @@
 
         matches[currentMatchIndex].events.push({
             type: 'penalty',
-            team: 'opponent',
-            player: 'Soupeř (trest)',
-            penaltyType: 'Trest',
-            minutes: '2',
+            team: matches[currentMatchIndex].opponent,
+            player: matches[currentMatchIndex].opponent,
             eventTime: timeFormatted
         });
         saveData();
