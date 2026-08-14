@@ -151,8 +151,8 @@
         </div>
 
         <div class="match-header">
-            <h2 id="match-title">HC Slovan Louny vs. Chomutov</h2>
-            <p>14. 8. 2026 10:40 | Typ: Mistrovský</p>
+            <h2 id="match-title">HC Slovan Louny vs. Teplice</h2>
+            <p>14. 8. 2026 11:59 | Typ: Přátelský</p>
         </div>
 
         <div style="margin-bottom: 15px;">
@@ -168,7 +168,7 @@
             <div class="score-num" id="score-display">1:1</div>
             <div class="team" style="flex-direction: row-reverse; text-align: right;">
                 <img src="opponent-logo.png" alt="" onerror="this.style.display='none'">
-                <span id="opponent-name-header">HOSTÉ<br>CHOMUTOV</span>
+                <span id="opponent-name-header">HOSTÉ<br>TEPLICE</span>
             </div>
         </div>
 
@@ -181,7 +181,7 @@
             <div class="penalty-num" id="penalty-display">1:1</div>
             <div class="team" style="flex-direction: row-reverse; text-align: right;">
                 <img src="opponent-logo.png" alt="" onerror="this.style.display='none'">
-                <span style="color: #c62828;">FAULY<br>CHOMUTOV</span>
+                <span style="color: #c62828;">FAULY<br>TEPLICE</span>
             </div>
         </div>
 
@@ -207,14 +207,34 @@
         <div class="events-section">
             <h3>Události v utkání</h3>
             <div id="events-list">
-                <!-- Dynamické položky -->
+                <!-- Ukázkové položky -->
+                <div class="event-item penalty">
+                    <div class="event-content">
+                        <span>[14. 8. 2026 11:59]</span>
+                        <span>👮 Faul - Teplice</span>
+                    </div>
+                    <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+                </div>
+                <div class="event-item penalty">
+                    <div class="event-content">
+                        <span>[14. 8. 2026 11:58]</span>
+                        <span>👮 Faul - HC Slovan Louny: Slezák Samuel (#25) (Hákování - 2 min)</span>
+                    </div>
+                    <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+                </div>
                 <div class="event-item goal">
                     <div class="event-content">
-                        <span>[14. 8. 2026 10:40]</span>
-                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'></circle></svg>" style="width:16px;height:16px;display:none">
-                        <span>🥅 Gól - HC Slovan Louny: Květák Lukáš (#16) (Asistence: Křesák Tadeáš (#77))</span>
+                        <span>[14. 8. 2026 11:56]</span>
+                        <span>🥅 Gól - Teplice</span>
                     </div>
-                    <button class="delete-btn">✕</button>
+                    <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+                </div>
+                <div class="event-item goal">
+                    <div class="event-content">
+                        <span>[14. 8. 2026 11:55]</span>
+                        <span>🥅 Gól - HC Slovan Louny: Slavík Jakub (#10) (Asistence: Müller Amálie (#2))</span>
+                    </div>
+                    <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
                 </div>
             </div>
         </div>
@@ -222,7 +242,7 @@
     </div>
 
     <script>
-        // Získání názvu soupeře z hlavičky (např. Chomutov)
+        // Získání aktuálního názvu soupeře z nadpisu zápasu (např. "Teplice")
         function getOpponentName() {
             const headerText = document.getElementById('match-title').innerText;
             if (headerText.includes('vs.')) {
@@ -233,7 +253,7 @@
 
         function addGoal(team) {
             const eventsList = document.getElementById('events-list');
-            const timeStr = '[14. 8. 2026 10:40]';
+            const timeStr = '[14. 8. 2026 11:59]';
             const teamName = team === 'home' ? 'HC Slovan Louny' : getOpponentName();
             
             const item = document.createElement('div');
@@ -250,7 +270,7 @@
 
         function addPenalty(team) {
             const eventsList = document.getElementById('events-list');
-            const timeStr = '[14. 8. 2026 10:40]';
+            const timeStr = '[14. 8. 2026 11:59]';
             const teamName = team === 'home' ? 'HC Slovan Louny' : getOpponentName();
             
             const item = document.createElement('div');
