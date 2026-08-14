@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HC Slovan Louny</title>
-    
-    <!-- Definice ikony a PWA nastavení -->
-    <link rel="icon" type="image/png" href="Logo.png">
-    <link rel="apple-touch-icon" href="Logo.png">
-    <link rel="manifest" href="manifest.json">
-    
-    <meta name="apple-mobile-web-app-title" content="Slovan Louny">
-    <meta name="application-name" content="Slovan Louny">
+    <!-- Definice ikony a vzhledu pro mobilní zařízení (PWA / Web App) -->
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/wMcDKKXv/Louny.png">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/wMcDKKXv/Louny.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Slovan Louny">
     <meta name="theme-color" content="#0b192c">
 
     <!-- Firebase knihovny pro online databázi -->
@@ -418,6 +414,7 @@
             text-align: left;
         }
 
+        /* Styl pro vizuální hřiště v lajnách (brankář dole, centr nahoře) - upravené ledové pozadí */
         .rink-tactical-board {
             position: relative;
             background-color: #eaf3fb;
@@ -478,7 +475,7 @@
 
 <div class="app-header-bar">
     <div class="app-header-left">
-        <img src="Logo.png" alt="Logo" class="app-header-logo">
+        <img src="https://i.postimg.cc/wMcDKKXv/Louny.png" alt="Logo" class="app-header-logo">
         <span class="app-header-title">HC Slovan Louny</span>
     </div>
     <div class="app-header-badge">App</div>
@@ -489,7 +486,7 @@
     <!-- ÚVODNÍ OBRAZOVKA -->
     <div id="homeScreen" class="screen active">
         <div class="home-header">
-            <img src="Logo.png" alt="Logo HC Slovan Louny">
+            <img src="https://i.postimg.cc/wMcDKKXv/Louny.png" alt="Logo HC Slovan Louny">
             <h1>HC Slovan Louny</h1>
         </div>
         <div class="home-menu">
@@ -625,7 +622,7 @@
             <div class="scoreboard-center-title">Skóre</div>
             <div class="scoreboard-grid">
                 <div class="team-side-box">
-                    <img id="logoLouny" src="Logo.png" class="board-logo" alt="Louny">
+                    <img id="logoLouny" src="https://i.postimg.cc/wMcDKKXv/Louny.png" class="board-logo" alt="Louny">
                     <div class="team-info-col">
                         <span class="board-team-label">Domácí</span>
                         <span class="board-team-name">Louny</span>
@@ -652,7 +649,7 @@
             <div class="scoreboard-center-title">Tresty (Fauly)</div>
             <div class="scoreboard-grid">
                 <div class="team-side-box">
-                    <img id="logoLounyPen" src="Logo.png" class="board-logo" alt="Louny">
+                    <img id="logoLounyPen" src="https://i.postimg.cc/wMcDKKXv/Louny.png" class="board-logo" alt="Louny">
                     <div class="team-info-col">
                         <span class="board-team-label">Fauly</span>
                         <span class="board-team-name">Louny</span>
@@ -676,7 +673,7 @@
         </div>
 
         <div class="match-actions-grid">
-            <button class="btn-goal-louny" onclick="openEventModal('goal_louny')">i Gól Louny</button>
+            <button class="btn-goal-louny" onclick="openEventModal('goal_louny')">🥅 Gól Louny</button>
             <button class="btn-goal-opp" onclick="addOpponentGoal()">🥅 Gól Soupeř</button>
             <button class="btn-pen-louny" onclick="openEventModal('pen_louny')">👮 Faul Louny</button>
             <button class="btn-pen-opp" onclick="openOpponentPenaltyModal()">👮 Faul Soupeř</button>
@@ -1477,7 +1474,7 @@
 
                 const item = document.createElement('div');
                 item.className = 'event-item';
-                let icon = ev.type === 'goal' ? 'nit Gól' : '👮 Faul';
+                let icon = ev.type === 'goal' ? '🥅 Gól' : '👮 Faul';
                 let detailStr = `${ev.team}: ${ev.player || ''}`;
                 if (ev.type === 'goal' && ev.assist && ev.assist !== 'Žádná') {
                     detailStr += ` (Asistence: ${ev.assist})`;
@@ -1731,7 +1728,6 @@
 
         let html = `
             <div class="rink-tactical-board">
-                <!-- 1. řádek (Vrchol): Centr -->
                 <div class="rink-row center-row">
                     <div class="rink-slot center-slot">
                         <label>Centr (C)</label>
@@ -1739,7 +1735,6 @@
                     </div>
                 </div>
 
-                <!-- 2. řádek: Křídla -->
                 <div class="rink-row">
                     <div class="rink-slot">
                         <label>Levé křídlo (LK)</label>
@@ -1751,7 +1746,6 @@
                     </div>
                 </div>
 
-                <!-- 3. řádek: Obránci -->
                 <div class="rink-row">
                     <div class="rink-slot">
                         <label>Levý obránce (LO)</label>
@@ -1763,7 +1757,6 @@
                     </div>
                 </div>
 
-                <!-- 4. řádek (Spodek): Brankář -->
                 <div class="rink-row center-row">
                     <div class="rink-slot center-slot">
                         <label>Brankář (G)</label>
@@ -1791,21 +1784,5 @@
 
     loadDataFromCloud();
 </script>
-
-<!-- Registrační skript pro Service Worker (PWA) -->
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(registration => {
-                    console.log('Service Worker zaregistrován s rozsahem:', registration.scope);
-                })
-                .catch(error => {
-                    console.error('Registrace Service Workeru selhala:', error);
-                });
-        });
-    }
-</script>
-
 </body>
 </html>
