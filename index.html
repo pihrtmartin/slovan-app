@@ -1477,7 +1477,7 @@
 
                 const item = document.createElement('div');
                 item.className = 'event-item';
-                let icon = ev.type === 'goal' ? '🥅 Gól' : '👮 Faul';
+                let icon = ev.type === 'goal' ? 'nit Gól' : '👮 Faul';
                 let detailStr = `${ev.team}: ${ev.player || ''}`;
                 if (ev.type === 'goal' && ev.assist && ev.assist !== 'Žádná') {
                     detailStr += ` (Asistence: ${ev.assist})`;
@@ -1791,5 +1791,21 @@
 
     loadDataFromCloud();
 </script>
+
+<!-- Registrační skript pro Service Worker (PWA) -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(registration => {
+                    console.log('Service Worker zaregistrován s rozsahem:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Registrace Service Workeru selhala:', error);
+                });
+        });
+    }
+</script>
+
 </body>
 </html>
